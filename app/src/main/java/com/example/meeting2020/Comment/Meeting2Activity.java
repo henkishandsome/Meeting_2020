@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,15 +31,23 @@ import org.java_websocket.drafts.Draft;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.framing.Framedata;
 import org.java_websocket.handshake.ServerHandshake;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.channels.NotYetConnectedException;
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 public class Meeting2Activity extends AppCompatActivity {
@@ -370,6 +379,36 @@ public class Meeting2Activity extends AppCompatActivity {
         }
     }
     private void getSupportNum(){
+//        OkHttpClient okHttpClient=new OkHttpClient();
+//        Request request=new Request.Builder().url(HttpUtilsHttpURLConnection.BASE_URL2+"/MeetingSpeaker").build();
+//        Call call=okHttpClient.newCall(request);
+//        call.enqueue(new Callback() {
+//            @Override
+//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                Toast.makeText(Meeting2Activity.this,"系统繁忙，请稍后再试",Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//                String res=response.body().string();
+//                try {
+//                            JSONObject jsonObject=new JSONObject(res);
+//                            String result=jsonObject.getString("result");
+//                            int supnum=jsonObject.getInt("speaker_SupNum");
+//                            int disnum=jsonObject.getInt("speaker_DisNum");
+//                            if ("success".equals(result)){
+//                                tv_supnum.setText(supnum+"");
+//                                tv_disnum.setText(disnum+"");
+//                            }else {
+//                                Toast.makeText(Meeting2Activity.this,"系统繁忙，请稍后再试",Toast.LENGTH_SHORT).show();
+//                            }
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//
+//        });
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -427,6 +466,14 @@ public class Meeting2Activity extends AppCompatActivity {
         public void onUpgrade(SQLiteDatabase db,int oldVersion,int newVersion){
 
         }
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event){
+        if (keyCode==KeyEvent.KEYCODE_BACK){
+            mClient.close();
+            Meeting2Activity.this.finish();
+        }
+        return true;
     }
 
 }
